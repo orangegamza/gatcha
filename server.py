@@ -12,10 +12,6 @@ mastodon = Mastodon(
     api_base_url='https://dgpath.space'
 )
 
-listener = dgListener()
-mastodon.stream_user(listener)
-answers = "TEST"
-
 class dgListener(StreamListener):
     def on_notification(self, notification):
         if notification['type'] == 'mention':
@@ -23,6 +19,8 @@ class dgListener(StreamListener):
             visibility = notification['status']['visibility']
             mastodon.status_post(answers, in_reply_to_id = id, visibility = visibility)
 
+listener = dgListener()
+answers = "TEST"
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
