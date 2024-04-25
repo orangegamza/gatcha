@@ -4,6 +4,7 @@ import socketserver
 
 from http import HTTPStatus
 from mastodon import Mastodon
+from mastodon.streaming import StreamListener
 
 # Create an instance of the Mastodon class
 mastodon = Mastodon(
@@ -20,7 +21,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.send_response(HTTPStatus.OK)
         self.end_headers()
         msg = 'Hello! you requested %s' % (self.path)
-        mastodon.stream_user(handle_mention())
+        mastodon.stream_user(handle_mention(StreamListener))
         self.wfile.write(msg.encode())
 
 port = int(os.getenv('PORT', 80))
