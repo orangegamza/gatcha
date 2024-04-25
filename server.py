@@ -18,9 +18,9 @@ answers = "TEST"
 
 class dgListener(StreamListener):
     def on_notification(self, notification):
-        if notification[’type’] == ’mention’:
-            id = notification[’status’][’id’]
-            visibility = notification[’status’][’visibility’]
+        if notification['type'] == 'mention':
+            id = notification['status']['id']
+            visibility = notification['status']['visibility']
             mastodon.status_post(answers, in_reply_to_id = id, visibility = visibility)
 
 
