@@ -12,16 +12,24 @@ mastodon = Mastodon(
     api_base_url='https://dgpath.space'
 )
 
-def handle_mention(status):
-    if '@system' in status.content:
-        mastodon.status_post('@' + status.account.username + ' 테스트 출력입니다')
+listener = dgListener()
+mastodon.stream_user(listener)
+answers = "TEST"
+
+class dgListener(StreamListener):
+    def on_notification(self, notification):
+        if notification[’type’] == ’mention’:
+            id = notification[’status’][’id’]
+            visibility = notification[’status’][’visibility’]
+            mastodon.status_post(answers, in_reply_to_id = id, visibility = visibility)
+
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         self.send_response(HTTPStatus.OK)
         self.end_headers()
         msg = 'Hello! you requested %s' % (self.path)
-        mastodon.stream_user(handle_mention(StreamListener))
+        mastodon.stream_user(listener)
         self.wfile.write(msg.encode())
 
 port = int(os.getenv('PORT', 80))
