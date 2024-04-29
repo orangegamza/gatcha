@@ -18,6 +18,8 @@ class dgListener(StreamListener):
             id = notification['status']['id']
             visibility = notification['status']['visibility']
             mastodon.status_post(answers, in_reply_to_id = id, visibility = visibility)
+    def handle_heartbeat(self):
+        return super().handle_heartbeat()
 
 listener = dgListener()
 answers = "TEST"
