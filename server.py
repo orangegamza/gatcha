@@ -9,8 +9,6 @@ from mastodon.streaming import StreamListener
 from oauth2client.service_account import ServiceAccountCredentials
 import gspread
 
-import string
-
 # Create an instance of the Mastodon class
 mastodon = Mastodon(
     access_token='8HfPqIU2__o9sOhjVLEojEVPyI4LvLR4GXlJeNJZ9rU',
@@ -43,7 +41,7 @@ def playGatcha(n):
     for i in range(n):
         gatcha.update_cell(4, 15, False)
         gatcha.update_cell(4, 15, True)
-        result += "\n" + gatcha.cell(4, 14).value
+        result += "\n" + str(gatcha.cell(4, 14).value)
     return result
 
 def upadateEmblem():
@@ -71,21 +69,17 @@ class dgListener(StreamListener):
                     answers = playGatcha(4)
                 elif '5' in notification['status']['content']:
                      answers = playGatcha(5)
-  
+        
         mastodon.status_post("@" + notification['account']['username'] + "\n" + 
-                                 answers, in_reply_to_id = id, 
-                                 visibility = visibility)
-    def handle_heartbeat(self):
-        return super().handle_heartbeat
-    
-mastodon.stream_user(dgListener())
+                            answers, in_reply_to_id = id, 
+                            visibility = visibility)
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         self.send_response(HTTPStatus.OK)
         self.end_headers()
-        msg = 'Hello! you requested %s' % (self.path)
-        # mastodon.stream_user(dgListener)
+        # msg = 'Hello! you requested %s' % (self.path)
+        mastodon.stream_user(dgListener())
         # self.wfile.write(msg.encode())
 
 port = int(os.getenv('PORT', 80))

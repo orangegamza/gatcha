@@ -1,4 +1,3 @@
 Mastodon.py
 oauth2client
 gspread
-p
